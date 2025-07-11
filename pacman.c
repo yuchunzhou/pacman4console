@@ -13,6 +13,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <sys/timeb.h>
+#include <time.h>
+#include <unistd.h>
 #include "pacman.h"
 
 #define EXIT_MSG "Good bye!"
