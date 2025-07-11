@@ -1,31 +1,28 @@
-prefix=/usr/local
-bindir=$(prefix)/bin
-datarootdir=$(prefix)/share
+prefix = /usr/local
+bindir = $(prefix)/bin
+datarootdir = $(prefix)/share
+player = $(shell logname)
 
 all:
-	gcc pacman.c     -o pacman     -DDATAROOTDIR=\"$(datarootdir)\" $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -lncurses
-	gcc pacmanedit.c -o pacmanedit -DDATAROOTDIR=\"$(datarootdir)\" $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -lncurses
+	gcc pacman.c     -o pacman     -DDATAROOTDIR=\"$(datarootdir)\"  $(CFLAGS) $(LDFLAGS) -lncurses
+	gcc pacmanedit.c -o pacmanedit -DDATAROOTDIR=\"$(datarootdir)\"  $(CFLAGS) $(LDFLAGS) -lncurses
 
-install:	all
-	mkdir -p $(DESTDIR)$(bindir)
-	cp pacman $(DESTDIR)$(bindir)
-	cp pacmanedit $(DESTDIR)$(bindir)
-	mkdir -p $(DESTDIR)$(datarootdir)/pacman
-	cp -fR Levels/ $(DESTDIR)$(datarootdir)/pacman/
-	-chown root:games $(DESTDIR)$(bindir)/pacman
-	-chown root:games $(DESTDIR)$(datarootdir)/pacman -R
-	chmod 750 $(DESTDIR)$(bindir)/pacman
-	chmod 750 $(DESTDIR)$(bindir)/pacmanedit
-	chmod 750 $(DESTDIR)$(datarootdir)/pacman/ -R
+install: all
+	sudo mkdir -p $(bindir)
+	sudo cp pacman $(bindir)
+	sudo cp pacmanedit $(bindir)
+	sudo mkdir -p $(datarootdir)/pacman
+	sudo cp -fR Levels/ $(datarootdir)/pacman/
+	sudo chown root:$(player) $(bindir)/pacman
+	sudo chown -R root:$(player) $(datarootdir)/pacman
+	sudo chmod 750 $(bindir)/pacman
+	sudo chmod 750 $(bindir)/pacmanedit
+	sudo chmod -R 750 $(datarootdir)/pacman/
 
 uninstall:
-	rm -f $(DESTDIR)$(bindir)/pacman
-	rm -f $(DESTDIR)$(bindir)/pacmanedit
-	rm -f $(DESTDIR)$(datarootdir)/pacman/Levels/level0[1-9].dat
-	rm -f $(DESTDIR)$(datarootdir)/pacman/Levels/README
-	rm -f $(DESTDIR)$(datarootdir)/pacman/Levels/template.dat
-	if [ -e $(DESTDIR)$(datarootdir)/pacman/Levels/ ] ; then rmdir $(DESTDIR)$(datarootdir)/pacman/Levels/ ; fi
-	if [ -e $(DESTDIR)$(datarootdir)/pacman/ ] ; then rmdir $(DESTDIR)$(datarootdir)/pacman/ ; fi
+	sudo rm -f $(bindir)/pacman
+	sudo rm -f $(bindir)/pacmanedit
+	if [[ -e $(datarootdir)/pacman/ ]]; then sudo rm -rf $(datarootdir)/pacman/; fi
 
 clean:
 	rm -f pacman
